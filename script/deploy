@@ -12,11 +12,7 @@ ssh ubuntu@10.118.10.25 <<EOF
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
     fi;
 
-    pid=$(cat /home/ubuntu/forever/express-long-polling/pidfile 2>/dev/null)
-    if [ ! -z "$pid" ]; then
-      echo "stop previous forever process"
-      forever stop $pid
-    fi;
+    pid=$(cat /home/ubuntu/forever/express-long-polling/pidfile 2>/dev/null) && forever stop $pid
 
     echo "serve the application"
 
