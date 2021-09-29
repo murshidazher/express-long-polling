@@ -19,16 +19,7 @@ ssh ubuntu@10.118.10.25 <<EOF
     fi;
 
     # run the code using forever
-    forever                                               \
-    start                                                 \
-    -p $project-forever/$project-name                     \
-    -l forever.log                                        \
-    -o $project-forever/$project-name/stdout.log          \
-    -e $project-forever/$project-name/stderr.log          \
-    -a                                                    \
-    --pidFile $project-forever/$project-name/pidfile      \
-    --sourceDir "/home/ubuntu/$project-name"              \
-    --workingDir "/home/ubuntu/$project-name"             \
-      "$startup-script"
+    forever start -p $project-forever/$project-name -l forever.log -o $project-forever/$project-name/stdout.log -e $project-forever/$project-name/stderr.log -a --pidFile $project-forever/$project-name/pidfile --sourceDir "/home/ubuntu/$project-name" --workingDir "/home/ubuntu/$project-name" "$startup-script"
+
     exit
 EOF
