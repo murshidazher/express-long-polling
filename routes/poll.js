@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const config = require('./config');
 
 // Can use routers as well
 const longpoll = require("express-longpoll")(router);
@@ -11,7 +12,7 @@ router.get("/", (req, res) => {
       text: "Some data"
   });
   res.send({
-    message: `v${process.env.npm_package_version}`,
+    message: `v${config.api.VERSION}`,
     status: 'up'
   });
 });
