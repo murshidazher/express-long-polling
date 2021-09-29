@@ -1,0 +1,9 @@
+#!/bin/sh
+ssh ubuntu@10.118.10.25 <<EOF
+    cd ~/express-long-polling
+    git pull origin main
+    npm install
+    npm install -g nodemon pm2 forever
+    forever start server.js
+    exit
+EOF
