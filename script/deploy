@@ -1,5 +1,10 @@
 #!/bin/sh
 ssh ubuntu@10.118.10.25 <<EOF
+
+    startup-script=server.js
+    project-name=express-long-polling
+    project-forever=/home/ubuntu/forever
+
     cd ~/express-long-polling
     git pull origin main
     curl -o-   https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh    | bash
@@ -7,6 +12,23 @@ ssh ubuntu@10.118.10.25 <<EOF
     nvm install v12.19.0
     npm install
     npm install -g nodemon pm2 forever
-    forever start server.js
+
+    pid=$(cat $project-forever/$project-name/pidfile 2>/dev/null)
+    if [ ! -z "$pid" ]; then
+      forever stop $pid
+    fi;
+
+    # run the code using forever
+    forever                                               \
+    start                                                 \
+    -p $project-forever/$project-name                     \
+    -l forever.log                                        \
+    -o $project-forever/$project-name/stdout.log          \
+    -e $project-forever/$project-name/stderr.log          \
+    -a                                                    \
+    --pidFile $project-forever/$project-name/pidfile      \
+    --sourceDir "/home/ubuntu/$project-name"              \
+    --workingDir "/home/ubuntu/$project-name"             \
+      "$startup-script"
     exit
 EOF
