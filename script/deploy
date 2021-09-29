@@ -15,8 +15,8 @@ ssh ubuntu@10.118.10.25 <<EOF
     echo "stop all application"
     forever stopall
 
-    echo "simulate a 1m downtime"
-    sleep 1m
+    # echo "simulate a 20s downtime"
+    # sleep 20s
 
     echo "serve the application"
 

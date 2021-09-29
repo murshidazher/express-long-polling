@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
       text: "Some data"
   });
   res.send({
-    message: `v${config.api.VERSION}`,
+    message: `v${config.api.VERSION} : worker ID - ${process.pid}`,
     status: 'up'
   });
 });
