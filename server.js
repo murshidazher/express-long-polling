@@ -17,6 +17,6 @@ app.use("/", require("./routes/poll.js"));
 
 app.listen(8080, function () {
   // simulate time to connect to other services
-  let number = fabObj.calculateFibonacciValue(Number.parseInt(40));
+  let number = fabObj.calculateFibonacciValue(Number.parseInt(50));
   console.log("Listening on port 8080");
 });
