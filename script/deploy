@@ -15,6 +15,9 @@ ssh ubuntu@10.118.10.25 <<EOF
     echo "stop all application"
     forever stopall
 
+    echo "simulate a 1m downtime"
+    sleep 1m
+
     echo "serve the application"
 
     forever start -p "/home/ubuntu/forever/express-long-polling" -l "forever.log" -o "/home/ubuntu/forever/express-long-polling/stdout.log" -e "/home/ubuntu/forever/express-long-polling/stderr.log" --append --pidFile "/home/ubuntu/forever/express-long-polling/pidfile" --sourceDir "/home/ubuntu/express-long-polling" --workingDir "/home/ubuntu/express-long-polling" "server.js"
