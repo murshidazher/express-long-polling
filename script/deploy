@@ -6,7 +6,7 @@ ssh ubuntu@10.118.10.25 <<EOF
     . ~/.nvm/nvm.sh
     nvm install v12.22.6
     npm install
-    npm install -g forever
+    npm install -g forever taskkill
 
     if [ ! -d "/home/ubuntu/forever/express-long-polling/" ]; then
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
@@ -16,7 +16,7 @@ ssh ubuntu@10.118.10.25 <<EOF
     cat /home/ubuntu/forever/express-long-polling/pidfile | xargs -n1 forever stop
 
     # stop all the previous child process gracefully
-    npm run kill
+    # npm run kill
 
     echo "serve the application"
     npm run start
