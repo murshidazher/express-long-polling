@@ -8,7 +8,7 @@ class Server {
         this.isProcessExit = false
         this.setProcess()
         this.initiate()
-        this.run()
+        // this.run()
     }
 
     initiate() {
@@ -64,7 +64,9 @@ class Server {
             }
 
             if (signal === 'SIGTERM') {
-                this.isProcessExit = true
+                console.log(`Close all connections ${process.pid}`)
+                console.log(process.argv[2])
+                process.exit(2)
             }
         })
     }
