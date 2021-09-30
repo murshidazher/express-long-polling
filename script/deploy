@@ -4,7 +4,7 @@ ssh ubuntu@10.118.10.25 <<EOF
     git pull origin main
     curl -o-   https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh    | bash
     . ~/.nvm/nvm.sh
-    nvm install v12.19.0
+    nvm install v12.22.6
     npm install
     npm install -g forever
 
@@ -12,8 +12,11 @@ ssh ubuntu@10.118.10.25 <<EOF
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
     fi;
 
-    # echo "stop all application"
+    # echo "stop application using pid"
     cat /home/ubuntu/forever/express-long-polling/pidfile | xargs -n1 forever stop
+
+    # stop all the previous child process gracefully
+    npm run kill
 
     echo "serve the application"
     npm run start
