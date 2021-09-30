@@ -20,7 +20,7 @@ ssh ubuntu@10.118.10.25 <<EOF
 
     echo "serve the application"
     # nohup node index.js >> app.log 2>&1 &
-    nohup npm run start
+    nohup node src/monitor.js >> ~/app.log 2>&1 &
 
     exit
 EOF
