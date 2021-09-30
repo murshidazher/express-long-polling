@@ -1,4 +1,3 @@
-const forever = require('forever');
 const { Monitor } = require('forever-monitor');
 
 class NodeMonitor {
@@ -10,7 +9,16 @@ class NodeMonitor {
         const child = new (Monitor)('server.js', {
             max: 10,
             silent: false,
+            uid: "express-long-polling",
+            path: "/home/ubuntu/forever/express-long-polling",
             killTree: true,
+            append: true,
+            pidFile: "/home/ubuntu/forever/express-long-polling/pidfile",
+            logFile: "forever.log",
+            outFile: "/home/ubuntu/forever/express-long-polling/stdout.log",
+            errFile: "/home/ubuntu/forever/express-long-polling/stderr.log",
+            sourceDir: "/home/ubuntu/express-long-polling",
+            cwd: "/home/ubuntu/express-long-polling",
             args: [this.restartsCount]
         });
 
@@ -30,7 +38,7 @@ class NodeMonitor {
             }
         });
 
-        forever.startServer(child);
+        child.start();
     }
 }
 
