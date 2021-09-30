@@ -1,4 +1,5 @@
-const forever = require('forever-monitor');
+const forever = require('forever');
+const { Monitor } = require('forever-monitor');
 
 class NodeMonitor {
     constructor() {
@@ -6,7 +7,7 @@ class NodeMonitor {
     }
 
     initiate() {
-        const child = new (forever.Monitor)('server.js', {
+        const child = new (Monitor)('server.js', {
             max: 10,
             silent: false,
             killTree: true,
@@ -29,7 +30,7 @@ class NodeMonitor {
             }
         });
 
-        child.start();
+        forever.startServer(child);
     }
 }
 

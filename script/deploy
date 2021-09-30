@@ -12,7 +12,7 @@ ssh ubuntu@10.118.10.25 <<EOF
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
     fi;
 
-    echo "stop all application"
+    # echo "stop all application"
     forever stopall
 
     # echo "simulate a 20s downtime"
