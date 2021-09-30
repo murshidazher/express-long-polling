@@ -1,0 +1,12 @@
+# Exclude everything by default
+/**/*
+
+# But don't exclude folders (i.e. only exclude files)
+!/**/*/
+
+## Exclude files
++LICENSE
+
+# Include these file extensions
+!*.css
+!*.js

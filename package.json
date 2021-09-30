@@ -1,19 +1,40 @@
 {
-  "name": "example-1",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/monitor.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "~2.8.5",
-    "death": "~1.1.0",
-    "express": "^4.14.1",
-    "express-longpoll": "~0.0.6",
-    "forever-monitor": "~3.0.3"
-  }
+    "name": "example-1",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node src/monitor.js",
+        "stop": "cat /home/ubuntu/forever/express-long-polling/pidfile | xargs -I forever stop %",
+        "build": "babel ./src --out-dir ./build",
+        "lint": "yarn lint:eslint && yarn lint:prettier",
+        "lint:eslint": "eslint \"**/*.*\"",
+        "lint:prettier": "prettier --check \"**/*.*\"",
+        "lint:fix": "eslint . --fix",
+        "fix": "yarn fix:eslint && yarn fix:prettier",
+        "fix:eslint": "eslint --fix \"**/*.*\"",
+        "fix:prettier": "prettier --write \"**/*.*\"",
+        "debug": "node --inspect-brk index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "~2.8.5",
+        "death": "~1.1.0",
+        "forever-monitor": "~3.0.3"
+    },
+    "devDependencies": {
+        "@babel/cli": "~7.15.7",
+        "@babel/core": "~7.15.5",
+        "@babel/node": "~7.15.4",
+        "@babel/preset-env": "~7.15.6",
+        "@babel/runtime": "~7.15.4",
+        "eslint": "~7.32.0",
+        "eslint-config-airbnb-base": "~14.2.1",
+        "eslint-config-prettier": "~8.3.0",
+        "eslint-plugin-import": "~2.24.2",
+        "eslint-plugin-prettier": "~4.0.0",
+        "nodemon": "~2.0.13",
+        "prettier": "~2.4.1"
+    }
 }

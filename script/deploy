@@ -13,14 +13,10 @@ ssh ubuntu@10.118.10.25 <<EOF
     fi;
 
     # echo "stop all application"
-    forever stopall
-
-    # echo "simulate a 20s downtime"
-    # sleep 20s
+    cat /home/ubuntu/forever/express-long-polling/pidfile | xargs -I forever stop %
 
     echo "serve the application"
-
-    forever start -p "/home/ubuntu/forever/express-long-polling" -l "forever.log" -o "/home/ubuntu/forever/express-long-polling/stdout.log" -e "/home/ubuntu/forever/express-long-polling/stderr.log" --append --pidFile "/home/ubuntu/forever/express-long-polling/pidfile" --sourceDir "/home/ubuntu/express-long-polling" --workingDir "/home/ubuntu/express-long-polling" "src/monitor.js"
+    npm run start
 
     exit
 EOF
