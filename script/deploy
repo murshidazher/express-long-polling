@@ -2,11 +2,11 @@
 ssh ubuntu@10.118.10.25 <<EOF
     cd ~/express-long-polling
     git pull origin main
-    curl -o-   https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh    | bash
+    curl -o-   https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
     . ~/.nvm/nvm.sh
     nvm install v12.22.6
     npm install
-    npm install -g forever taskkill
+    npm install -g forever
 
     if [ ! -d "/home/ubuntu/forever/express-long-polling/" ]; then
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
