@@ -6,7 +6,7 @@ ssh ubuntu@10.118.10.25 <<EOF
     . ~/.nvm/nvm.sh
     nvm install v12.22.6
     npm install
-    npm install -g forever
+    npm install -g forever pm2
 
     if [ ! -d "/home/ubuntu/forever/express-long-polling/" ]; then
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
@@ -19,7 +19,8 @@ ssh ubuntu@10.118.10.25 <<EOF
     # npm run kill
 
     echo "serve the application"
-    npm run start
+    # nohup node index.js >> app.log 2>&1 &
+    nohup npm run start
 
     exit
 EOF

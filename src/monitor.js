@@ -14,7 +14,7 @@ class NodeMonitor {
             path: '/home/ubuntu/forever/express-long-polling',
             killTree: true,
             append: true,
-            pidFile: `/home/ubuntu/forever/express-long-polling/pidfile_${process.pid}`,
+            pidFile: `/home/ubuntu/forever/express-long-polling/pidfile`,
             logFile: 'forever.log',
             outFile: '/home/ubuntu/forever/express-long-polling/stdout.log',
             errFile: '/home/ubuntu/forever/express-long-polling/stderr.log',
