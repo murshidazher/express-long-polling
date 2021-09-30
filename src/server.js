@@ -8,7 +8,7 @@ class Server {
         this.isProcessExit = false
         this.setProcess()
         this.initiate()
-        // this.run();
+        this.run()
     }
 
     initiate() {
