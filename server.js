@@ -48,7 +48,7 @@ app.use((req, res, next) => {
             'The application is not ready, but the request will be handled in a development environment'
         );
         next();
-    } else if (lightship.isReady()) {
+    } else if (lightship.isServerReady()) {
         next();
     } else {
         log.error(
