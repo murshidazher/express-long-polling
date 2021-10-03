@@ -120,7 +120,8 @@ app.get('/', (req, res) => {
 
     res.send({
         uuid: `${req.id}`,
-        message: `v${VERSION} : worker ID - ${process.pid}`,
+        version: `${VERSION}`,
+        worker: `${process.pid}`,
         status: 'up',
     });
 });
