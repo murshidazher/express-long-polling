@@ -19,9 +19,6 @@ const {
 const app = express();
 const lightship = createLightship();
 
-let total = 0;
-let runningTotal = 0;
-
 const log = bunyan.createLogger({
     name: 'express-pm2-long-polling',
     version: `${VERSION}`,
@@ -36,13 +33,6 @@ app.use(
 
 // check readiness
 app.use((req, res, next) => {
-    req.log = log.child(
-        { req_id: nanoid(), served: total, serving: runningTotal },
-        true
-    );
-    req.log.info({ req });
-    res.on('finish', () => req.log.info({ res }));
-
     if (process.env.NODE_ENV === 'development') {
         log.debug(
             'The application is not ready, but the request will be handled in a development environment'
@@ -96,26 +86,6 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    total += 1;
-    runningTotal += 1;
-
-    // serve MAX_REQUEST_SERVE requests and shutdown
-    // if (total === MAX_REQUEST_SERVE) {
-    //   lightship.shutdown();
-    // }
-
-    setTimeout(() => {
-        runningTotal -= 1;
-
-        if (runningTotal < 100) {
-            lightship.signalReady();
-            log.warn('SERVER_IS_READY - server is ready to requests.');
-        } else {
-            lightship.signalNotReady();
-            log.warn("SERVER_IS_NOT_READY - server isn't ready yet.");
-        }
-    }, REQ_TIMEOUT);
-
     log.info(`SERVER - 🚀 Serving on port ${SERVER_PORT}`);
 
     res.send({
