@@ -2,25 +2,25 @@
 ssh ubuntu@10.118.10.25 <<EOF
     cd ~/express-long-polling
     git pull origin main
-    curl -o-   https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+    curl -o-   https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh    | bash
     . ~/.nvm/nvm.sh
-    nvm install v12.22.6
+    nvm install v12.19.0
     npm install
-    npm install -g forever pm2
+    npm install -g forever
 
     if [ ! -d "/home/ubuntu/forever/express-long-polling/" ]; then
       mkdir -p "/home/ubuntu/forever/express-long-polling/"
     fi;
 
-    # echo "stop application using pid"
-    cat /home/ubuntu/forever/express-long-polling/pidfile | xargs -n1 forever stop
+    echo "stop all application"
+    forever stopall
 
-    # stop all the previous child process gracefully
-    # npm run kill
+    echo "simulate a 1m downtime"
+    sleep 1m
 
     echo "serve the application"
-    # nohup node index.js >> app.log 2>&1 &
-    nohup node src/monitor.js >> ~/app.log 2>&1 &
+
+    forever start -p "/home/ubuntu/forever/express-long-polling" -l "forever.log" -o "/home/ubuntu/forever/express-long-polling/stdout.log" -e "/home/ubuntu/forever/express-long-polling/stderr.log" --append --pidFile "/home/ubuntu/forever/express-long-polling/pidfile" --sourceDir "/home/ubuntu/express-long-polling" --workingDir "/home/ubuntu/express-long-polling" "server.js"
 
     exit
 EOF
