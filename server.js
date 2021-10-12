@@ -1,4 +1,6 @@
 const express = require('express');
+const fs = require('fs');
+const https = require('https');
 const cors = require('cors');
 const { nanoid } = require('nanoid');
 const delay = require('delay');
@@ -15,6 +17,11 @@ const {
     VERSION,
     REQ_TIMEOUT,
 } = require('./config');
+
+const options = {
+    key: fs.readFileSync('./ssl/key.pem'),
+    cert: fs.readFileSync('./ssl/cert.pem'),
+};
 
 const app = express();
 const lightship = createLightship();
@@ -96,7 +103,7 @@ app.get('/', (req, res) => {
     });
 });
 
-const server = app.listen(SERVER_PORT);
+const server = https.createServer(options, app).listen(SERVER_PORT);
 
 lightship.registerShutdownHandler(async () => {
     // allow sufficient amount of time to allow all of the existing
