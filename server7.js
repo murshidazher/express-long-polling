@@ -1,17 +1,9 @@
-const http = require('http');
 const express = require('express');
-const { createLightship } = require('lightship');
-const httpShutdown = require('http-shutdown');
-
-// Lightship will start a HTTP service on port 9000.
-const lightship = createLightship({
-    detectKubernetes: false,
-});
+const gracefulShutdown = require('http-graceful-shutdown');
 
 const app = express();
 
-const server = httpShutdown(http.createServer(app));
-
+// ------------------ End Middlewares ---------------
 app.get('/', (req, res) => {
     res.send('ok');
 });
@@ -34,35 +26,67 @@ app.get('/fib/:num', (req, res) => {
 // Launch the app:
 const PORT = process.env.PORT || 8080;
 
-server
-    .listen(PORT, () => {
-        console.log(`Listening on port ${PORT}`);
+const server = app.listen(PORT, () => {
+    console.log('HTTP-GRACEFUL-SHUTDOWN');
+    console.log('-------------------------------------------');
+    console.log(
+        'Advanced EXPRESS test using advanced options and cleanup function'
+    );
+    console.log(`Listening at http://localhost:${PORT}`);
+    console.log();
+    console.log('Press Ctrl-C to test shutdown');
+});
 
-        // Tell Kubernetes that we are now ready to process incoming HTTP requests:
-        lightship.signalReady();
-    })
-    .on('close', () => {
-        console.info('Received close event');
-        lightship.signalNotReady('server');
-    })
-    .on('error', () => {
-        console.log(`shutting down server`);
-        lightship.signalNotReady('server');
-        lightship.shutdown();
+// personal preShutdown function
+// - must return a promise
+// - the input parameter is optional (only needed if you want to
+//   access the signal type inside this function)
+// - used, when you need to have HTTP sockets still available and untouched by shutdown process
+// - this function here in this example takes 500ms to complete
+function preShutdown(signal) {
+    return new Promise((resolve) => {
+        console.log();
+        console.log('"preShutdown" function');
+        console.log(`... called signal: ${signal}`);
+        console.log('... for 500 ms');
+        console.log('...');
+        setTimeout(function () {
+            console.log('... preShutdown finished');
+            resolve();
+        }, 500);
     });
+}
+// personal cleanup function
+// - must return a promise
+// - the input parameter is optional (only needed if you want to
+//   access the signal type inside this function)
+// - this function here in this example takes one second to complete
+function cleanup(signal) {
+    return new Promise((resolve) => {
+        console.log();
+        console.log('"onShutdown" function');
+        console.log(`... called signal: ${signal}`);
+        console.log('... in cleanup');
+        console.log('... for 5 seconds');
+        console.log('...');
+        setTimeout(function () {
+            console.log('... cleanup finished');
+            resolve();
+        }, 5000);
+    });
+}
 
-lightship.registerShutdownHandler(
-    () =>
-        new Promise((resolve, reject) => {
-            console.warn('Closing the server...');
-            server.close((error) => {
-                if (error) {
-                    console.error(error.stack || error);
-                    reject(error.message);
-                } else {
-                    console.info('... successfully closed the server!');
-                    resolve();
-                }
-            });
-        }, 8000)
-);
+// this enables the graceful shutdown with advanced options
+gracefulShutdown(server, {
+    signals: 'SIGINT SIGTERM',
+    timeout: 20000,
+    development: false,
+    preShutdown,
+    onShutdown: cleanup,
+    forceExit: true,
+    finally() {
+        console.log();
+        console.log('In "finally" function');
+        console.log('Server graceful shut down completed.');
+    },
+});

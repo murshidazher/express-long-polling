@@ -1,17 +1,34 @@
-const http = require('http');
 const express = require('express');
 const { createLightship } = require('lightship');
-const httpShutdown = require('http-shutdown');
-const addRequestId = require('express-request-id');
+const cors = require('cors');
 
 // Lightship will start a HTTP service on port 9000.
+// add graceful shutdown monitor
 const lightship = createLightship({
     detectKubernetes: false,
+    shutdownHandlerTimeout: 20000,
+    shutdownDelay: 20000,
+    gracefulShutdownTimeout: 60000,
+    terminate: () => {
+        // detect what is keeping the node process still alive.
+        const whyIsNodeRunning = require('why-is-node-running');
+        whyIsNodeRunning();
+
+        // eslint-disable-next-line no-console
+        console.log(
+            `api server is shutting down - ${new Date().toUTCString()}`
+        );
+        process.exit(0);
+    },
 });
 
 const app = express();
 
-const server = httpShutdown(http.createServer(app));
+app.use(
+    cors({
+        origin: '*',
+    })
+);
 
 // ------------------ Add Middlewares ---------------
 
@@ -32,7 +49,10 @@ app.use((req, res, next) => {
         );
     }
 
-    return next();
+    const beacon = lightship.createBeacon();
+
+    next();
+    beacon.die();
 });
 
 // // add request id
@@ -79,7 +99,7 @@ app.get('/fib/:num', (req, res) => {
 // Launch the app:
 const PORT = process.env.PORT || 8080;
 
-server
+const server = app
     .listen(PORT, () => {
         console.log(`Listening on port ${PORT}`);
 
@@ -100,18 +120,16 @@ lightship.registerShutdownHandler(
     () =>
         new Promise((resolve, reject) => {
             console.log('Closing the server...');
-
-            setTimeout(() => {
-                server.close((error) => {
-                    if (error) {
-                        console.log(error.stack || error);
-                        reject(error.message);
-                    } else {
-                        console.log('... successfully closed the server!');
-                        resolve();
-                    }
-                });
-            }, 2 * 1000);
+            lightship.shutdown();
+            server.close((error) => {
+                if (error) {
+                    console.log(error.stack || error);
+                    reject(error.message);
+                } else {
+                    console.log('... successfully closed the server!');
+                    resolve();
+                }
+            });
         })
 );
 

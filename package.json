@@ -12,6 +12,7 @@
     "main": "server.js",
     "scripts": {
         "start": "node server8.js",
+        "start:7": "node server7.js",
         "stop": "cat /home/ubuntu/forever/express-long-polling/pidfile | xargs -I forever stop %",
         "kill": "pkill -f node && pkill -f nodejs",
         "build": "babel ./src --out-dir ./build",
