@@ -99,17 +99,20 @@ server
 lightship.registerShutdownHandler(
     () =>
         new Promise((resolve, reject) => {
-            console.warn('Closing the server...');
-            server.close((error) => {
-                if (error) {
-                    console.error(error.stack || error);
-                    reject(error.message);
-                } else {
-                    console.info('... successfully closed the server!');
-                    resolve();
-                }
-            });
-        }, 20 * 1000)
+            console.log('Closing the server...');
+
+            setTimeout(() => {
+                server.close((error) => {
+                    if (error) {
+                        console.log(error.stack || error);
+                        reject(error.message);
+                    } else {
+                        console.log('... successfully closed the server!');
+                        resolve();
+                    }
+                });
+            }, 2 * 1000);
+        })
 );
 
 // PORTS
